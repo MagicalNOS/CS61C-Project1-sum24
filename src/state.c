@@ -309,6 +309,36 @@ static void update_tail(game_state_t *state, unsigned int snum) {
 /* Task 4.5 */
 void update_state(game_state_t *state, int (*add_food)(game_state_t *state)) {
   // TODO: Implement this function.
+  unsigned int snake_nums = state->num_snakes;
+
+  for(unsigned int i = 0; i < snake_nums; i++){
+    snake_t* snake = &state->snakes[i];
+    
+    if(snake->live == false){
+      continue;
+    }
+
+    char next = next_square(state,i);
+
+    if(is_snake(next) || next == '#'){
+      snake->live = false;
+      state->board[snake->head_row][snake->head_col] = 'x';
+      continue;
+    }
+
+    if(next == '*'){
+      update_head(state,i);
+      add_food(state);
+      continue;
+    }
+
+    update_head(state,i);
+    update_tail(state,i);
+
+
+  }
+
+
   return;
 }
 
