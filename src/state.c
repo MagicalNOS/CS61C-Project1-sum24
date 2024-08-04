@@ -183,11 +183,11 @@ static char body_to_tail(char c) {
 */
 static char head_to_body(char c) {
   char* helper_body = "^<v>";
-  char* helper_tail = "WASD";
+  char* helper_head = "WASD";
   
   for(int i = 0; i < 4; i++){
-    if(c == helper_body[i]){
-      c = helper_tail[i];
+    if(c == helper_head[i]){
+      c = helper_body[i];
     }
   }
   return c;
@@ -236,7 +236,13 @@ static unsigned int get_next_col(unsigned int cur_col, char c) {
 */
 static char next_square(game_state_t *state, unsigned int snum) {
   // TODO: Implement this function.
-  return '?';
+
+  char head_forward = get_board_at(state,((state->snakes) + snum)->head_row,((state->snakes) + snum)->head_col);
+
+  unsigned int next_col = get_next_col(((state->snakes) + snum)->head_col,head_forward);
+  unsigned int next_row = get_next_row(((state->snakes) + snum)->head_row,head_forward);
+
+  return get_board_at(state,next_row,next_col);
 }
 
 /*
@@ -252,6 +258,21 @@ static char next_square(game_state_t *state, unsigned int snum) {
 */
 static void update_head(game_state_t *state, unsigned int snum) {
   // TODO: Implement this function.
+
+  char head_forward = get_board_at(state,((state->snakes) + snum)->head_row,((state->snakes) + snum)->head_col);
+
+  char body_set = head_to_body(head_forward);
+
+  set_board_at(state,((state->snakes) + snum)->head_row,((state->snakes) + snum)->head_col,body_set);
+
+  unsigned int next_col = get_next_col(((state->snakes) + snum)->head_col,head_forward);
+  unsigned int next_row = get_next_row(((state->snakes) + snum)->head_row,head_forward);
+
+  (state->snakes + snum)->head_col = next_col;
+  (state->snakes + snum)->head_row = next_row;
+
+  set_board_at(state,((state->snakes) + snum)->head_row,((state->snakes) + snum)->head_col,head_forward);
+
   return;
 }
 
@@ -267,6 +288,21 @@ static void update_head(game_state_t *state, unsigned int snum) {
 */
 static void update_tail(game_state_t *state, unsigned int snum) {
   // TODO: Implement this function.
+  char tail_forward = get_board_at(state,((state->snakes) + snum)->tail_row,((state->snakes) + snum)->tail_col);
+
+  unsigned int next_col = get_next_col(((state->snakes) + snum)->tail_col,tail_forward);
+  unsigned int next_row = get_next_row(((state->snakes) + snum)->tail_row,tail_forward);
+
+  char tail_set = body_to_tail(get_board_at(state,next_row,next_col));
+
+  set_board_at(state,((state->snakes) + snum)->tail_row,((state->snakes) + snum)->tail_row,' ');
+
+
+  (state->snakes + snum)->tail_col = next_col;
+  (state->snakes + snum)->tail_row = next_row;
+
+  set_board_at(state,((state->snakes) + snum)->tail_row,((state->snakes) + snum)->tail_col,tail_set);
+
   return;
 }
 
