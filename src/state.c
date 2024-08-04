@@ -32,20 +32,15 @@ game_state_t *create_default_state() {
   start->board = (char**)malloc(sizeof(char*) * start->num_rows);
   for (int i = 0; i < start->num_rows; i++) {
     start->board[i] = (char*)malloc(sizeof(char) * 21); // 20 chars + null terminator
+    strcpy(start->board[i],"#                  #");
   }
 
   strcpy(start->board[0],"####################");
   strcpy(start->board[17],"####################");
 
-  //Mistakes
+  // Mistakes
   // start->board[0] = "####################";
   // start->board[17] = "####################";
-
-
-  char* middle = {"#                  #"};
-  for(int i = 1; i < 17; i++){
-    strcpy(start->board[i],middle);
-  }
 
 
   //init fruit
@@ -64,12 +59,28 @@ game_state_t *create_default_state() {
 /* Task 2 */
 void free_state(game_state_t *state) {
   // TODO: Implement this function.
+
+  free(state->snakes);
+
+  for(int i = 0; i < state->num_rows; i++){
+    free(state->board[i]);
+  }
+
+  free(state->board);
+
+  free(state);
+
   return;
 }
 
 /* Task 3 */
 void print_board(game_state_t *state, FILE *fp) {
+
   // TODO: Implement this function.
+  for(int i = 0; i < state->num_rows; i++){
+    fprintf(fp,"%s\n",state->board[i]);
+  }
+
   return;
 }
 
@@ -106,7 +117,14 @@ static void set_board_at(game_state_t *state, unsigned int row, unsigned int col
 */
 static bool is_tail(char c) {
   // TODO: Implement this function.
-  return true;
+  char* helper_str = "wasd";
+  for(int i = 0; i < 4; i++){
+    if(c == helper_str[i]){
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /*
@@ -116,7 +134,13 @@ static bool is_tail(char c) {
 */
 static bool is_head(char c) {
   // TODO: Implement this function.
-  return true;
+  char* helper_str = "WASDx";
+  for(int i = 0; i < 5; i++){
+    if(c == helper_str[i]){
+      return true;
+    }
+  }
+  return false;
 }
 
 /*
@@ -125,7 +149,13 @@ static bool is_head(char c) {
 */
 static bool is_snake(char c) {
   // TODO: Implement this function.
-  return true;
+  char* helper_str = "wasd^<v>WASDx";
+  for(int i = 0; i < 13; i++){
+    if(c == helper_str[i]){
+      return true;
+    }
+  }
+  return false;
 }
 
 /*
@@ -135,7 +165,15 @@ static bool is_snake(char c) {
 */
 static char body_to_tail(char c) {
   // TODO: Implement this function.
-  return '?';
+  char* helper_body = "^<v>";
+  char* helper_tail = "wasd";
+  
+  for(int i = 0; i < 4; i++){
+    if(c == helper_body[i]){
+      c = helper_tail[i];
+    }
+  }
+  return c;
 }
 
 /*
@@ -144,8 +182,15 @@ static char body_to_tail(char c) {
   body ("^<v>").
 */
 static char head_to_body(char c) {
-  // TODO: Implement this function.
-  return '?';
+  char* helper_body = "^<v>";
+  char* helper_tail = "WASD";
+  
+  for(int i = 0; i < 4; i++){
+    if(c == helper_body[i]){
+      c = helper_tail[i];
+    }
+  }
+  return c;
 }
 
 /*
@@ -155,6 +200,13 @@ static char head_to_body(char c) {
 */
 static unsigned int get_next_row(unsigned int cur_row, char c) {
   // TODO: Implement this function.
+  if(c == 'v' || c == 's' || c == 'S'){
+    cur_row--;
+  }
+  else if(c == '^' || c == 'w' || c == 'W'){
+    cur_row++;
+  }
+
   return cur_row;
 }
 
@@ -165,6 +217,13 @@ static unsigned int get_next_row(unsigned int cur_row, char c) {
 */
 static unsigned int get_next_col(unsigned int cur_col, char c) {
   // TODO: Implement this function.
+  if(c == '>' || c == 'd' || c == 'D'){
+    cur_col++;
+  }
+  else if(c == '<' || c == 'a' || c == 'A'){
+    cur_col--;
+  }
+  
   return cur_col;
 }
 
