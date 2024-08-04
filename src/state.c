@@ -23,10 +23,34 @@ static void update_head(game_state_t *state, unsigned int snum);
 
 /* Task 1 */
 game_state_t *create_default_state() {
-  // TODO: Implement this function.
-  return NULL;
-}
+  
+  game_state_t* start = (game_state_t*)malloc(sizeof(game_state_t));
+  start->num_rows = 18;
+  start->num_snakes = 1;
 
+  //init the board
+  char* top_button = {"####################"};
+  start->board[0] = top_button;
+  start->board[17] = top_button;
+  char* middle = {"#                  #"};
+  for(int i = 1; i < 17; i++){
+    strcpy(start->board[i],middle);
+  }
+
+
+  //init fruit
+  start->board[2][9] = '*';
+  
+  //init the snake
+  snake_t* s1 = (snake_t*)malloc(sizeof(snake_t));
+  s1->live = true;
+  s1->tail_row = 2; s1->tail_col = 2;
+  s1->head_row = 2; s1->head_col = 4;
+  start->snakes = s1;  
+
+
+  return start;
+}
 /* Task 2 */
 void free_state(game_state_t *state) {
   // TODO: Implement this function.
