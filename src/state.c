@@ -28,10 +28,20 @@ game_state_t *create_default_state() {
   start->num_rows = 18;
   start->num_snakes = 1;
 
-  //init the board
-  char* top_button = {"####################"};
-  start->board[0] = top_button;
-  start->board[17] = top_button;
+  // Allocate memory for the board
+  start->board = (char**)malloc(sizeof(char*) * start->num_rows);
+  for (int i = 0; i < start->num_rows; i++) {
+    start->board[i] = (char*)malloc(sizeof(char) * 21); // 20 chars + null terminator
+  }
+
+  strcpy(start->board[0],"####################");
+  strcpy(start->board[17],"####################");
+
+  //Mistakes
+  // start->board[0] = "####################";
+  // start->board[17] = "####################";
+
+
   char* middle = {"#                  #"};
   for(int i = 1; i < 17; i++){
     strcpy(start->board[i],middle);
@@ -39,7 +49,7 @@ game_state_t *create_default_state() {
 
 
   //init fruit
-  start->board[2][9] = '*';
+  strcpy(start->board[2], "# d>D    *         #");
   
   //init the snake
   snake_t* s1 = (snake_t*)malloc(sizeof(snake_t));
@@ -48,9 +58,9 @@ game_state_t *create_default_state() {
   s1->head_row = 2; s1->head_col = 4;
   start->snakes = s1;  
 
-
   return start;
 }
+
 /* Task 2 */
 void free_state(game_state_t *state) {
   // TODO: Implement this function.
