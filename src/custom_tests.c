@@ -98,36 +98,118 @@ bool test_is_vowel() {
 
 bool test_is_tail() {
   // TODO: Implement this function.
+  char test_tail_1 = 'w';
+  bool output_1 = is_tail(test_tail_1);
+  if (!assert_true("test_tail_1", output_1)) {
+    return false;
+  }
+  
+  char test_tail_2 = 'q';
+  bool output_2 = is_tail(test_tail_2);
+  if (!assert_false("test_tail_2", output_2)) {
+    return false;
+  }
+
   return true;
 }
 
 bool test_is_head() {
   // TODO: Implement this function.
+  char test_head_1 = 'W';
+  bool output_1 = is_head(test_head_1);
+  if (!assert_true("test_head_1", output_1)) {
+    return false;
+  }
+  
+  char test_head_2 = 'q';
+  bool output_2 = is_head(test_head_2);
+  if (!assert_false("test_head_2", output_2)) {
+    return false;
+  }
+
   return true;
 }
 
 bool test_is_snake() {
   // TODO: Implement this function.
+  char test_snake_1 = 'W';
+  bool output_1 = is_head(test_snake_1);
+  if (!assert_true("test_snake_1", output_1)) {
+    return false;
+  }
+
+  char test_snake_2 = 'q';
+  bool output_2 = is_head(test_snake_2);
+  if (!assert_false("test_snake_2", output_2)) {
+    return false;
+  }
   return true;
 }
 
 bool test_body_to_tail() {
   // TODO: Implement this function.
+  char test_body_to_tail_1 = '^';
+  char tail_1 = 'w';
+  char output_1 = body_to_tail(test_body_to_tail_1);
+  if (!assert_true("test_body_to_tail_1", strcmp(&tail_1, &output_1))) {
+    return false;
+  }
+
+  char test_body_to_tail_2 = '1';
+  char tail_2 = 'w';
+  char output_2 = body_to_tail(test_body_to_tail_2);
+  if (!assert_false("test_body_to_tail_2", strcmp(&tail_2, &output_2) == 0)) {
+    return false;
+  }
   return true;
 }
 
 bool test_head_to_body() {
   // TODO: Implement this function.
-  return true;
-}
-
-bool test_get_next_row() {
-  // TODO: Implement this function.
+  char test_head_to_body_1 = 'W';
+  char body_1 = '^';
+  char output_1 = head_to_body(test_head_to_body_1);
+  if(!assert_true("test_head_to_body_1", strcmp(&body_1, &output_1))) {
+    return false;
+  }
   return true;
 }
 
 bool test_get_next_col() {
   // TODO: Implement this function.
+  unsigned int cur_col = 12;
+  char head = 'D';
+  unsigned int next_col = get_next_col(cur_col, head);
+  // printf("%d\n", next_col);
+  if(!assert_true("test_get_next_col_1", next_col == 13)) {
+    return false;
+  }
+
+  head = 'W';
+  next_col = get_next_col(cur_col, head);
+  if(!assert_true("test_get_next_col_2", next_col == 12)) {
+    return false;
+  }
+
+  return true;
+}
+
+bool test_get_next_row() {
+  // TODO: Implement this function.
+  unsigned int cur_row = 12;
+  char head = '^';
+  unsigned int next_row = get_next_row(cur_row, head);
+  // printf("%d\n", next_row);
+  if(!assert_true("test_get_next_row_1", next_row == 11)) {
+    return false;
+  }
+
+  head = 'D';
+  next_row = get_next_row(cur_row, head);
+  if(!assert_true("test_get_next_row_2", next_row == 12)) {
+    return false;
+  }
+
   return true;
 }
 

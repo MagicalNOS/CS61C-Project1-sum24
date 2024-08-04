@@ -201,10 +201,10 @@ static char head_to_body(char c) {
 static unsigned int get_next_row(unsigned int cur_row, char c) {
   // TODO: Implement this function.
   if(c == 'v' || c == 's' || c == 'S'){
-    cur_row--;
+    cur_row++;
   }
   else if(c == '^' || c == 'w' || c == 'W'){
-    cur_row++;
+    cur_row--;
   }
 
   return cur_row;
@@ -223,7 +223,7 @@ static unsigned int get_next_col(unsigned int cur_col, char c) {
   else if(c == '<' || c == 'a' || c == 'A'){
     cur_col--;
   }
-  
+
   return cur_col;
 }
 
