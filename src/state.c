@@ -288,23 +288,27 @@ static void update_head(game_state_t *state, unsigned int snum) {
   ...in the snake struct: update the row and col of the tail
 */
 static void update_tail(game_state_t *state, unsigned int snum) {
-  // TODO: Implement this function.
-  char tail_forward = get_board_at(state,((state->snakes) + snum)->tail_row,((state->snakes) + snum)->tail_col);
+    // Get the current tail position
+    unsigned int tail_row = (state->snakes + snum)->tail_row;
+    unsigned int tail_col = (state->snakes + snum)->tail_col;
 
-  unsigned int next_col = get_next_col(((state->snakes) + snum)->tail_col,tail_forward);
-  unsigned int next_row = get_next_row(((state->snakes) + snum)->tail_row,tail_forward);
+    // Get the direction the tail is facing
+    char tail_forward = get_board_at(state, tail_row, tail_col);
 
-  char tail_set = body_to_tail(get_board_at(state,next_row,next_col));
+    // Calculate the new tail position
+    unsigned int next_col = get_next_col(tail_col, tail_forward);
+    unsigned int next_row = get_next_row(tail_row, tail_forward);
 
-  set_board_at(state,((state->snakes) + snum)->tail_row,((state->snakes) + snum)->tail_row,' ');
+    // Set the new tail position
+    char tail_set = body_to_tail(get_board_at(state, next_row, next_col));
+    set_board_at(state, next_row, next_col, tail_set);
 
+    // Update the snake's tail position
+    (state->snakes + snum)->tail_row = next_row;
+    (state->snakes + snum)->tail_col = next_col;
 
-  (state->snakes + snum)->tail_col = next_col;
-  (state->snakes + snum)->tail_row = next_row;
-
-  set_board_at(state,((state->snakes) + snum)->tail_row,((state->snakes) + snum)->tail_col,tail_set);
-
-  return;
+    // Clear the old tail position
+    set_board_at(state, tail_row, tail_col, ' ');
 }
 
 /* Task 4.5 */
