@@ -356,7 +356,7 @@ char *read_line(FILE *fp) {
   }
 
 
-  char* heap_line = malloc(sizeof(char)*len + 5);
+  char* heap_line = malloc(sizeof(char)*len);
 
   if(heap_line == NULL){
     return NULL;
@@ -386,7 +386,7 @@ game_state_t *load_board(FILE *fp) {
     start->board = realloc(start->board,(start->num_rows + 1)* sizeof(char*));
     start->board[start->num_rows++] = line;
   }
-  
+
   start->snakes = NULL;
 
   return start;
@@ -400,13 +400,59 @@ game_state_t *load_board(FILE *fp) {
   trace through the board to find the head row and col, and
   fill in the head row and col in the struct.
 */
-static void find_head(game_state_t *state, unsigned int snum) {
+static void find_head(game_state_t* state, unsigned int snum) {
   // TODO: Implement this function.
+  snake_t* snake = &state->snakes[snum];
+  unsigned int cur_row = snake->tail_row;
+  unsigned int cur_col = snake->tail_col;
+  char cur_char = state->board[cur_row][cur_col];
+
+  while(!is_head(cur_char)) {
+    cur_row = get_next_row(cur_row, cur_char);
+    cur_col = get_next_col(cur_col, cur_char);
+    cur_char = state->board[cur_row][cur_col];
+  }
+
+  snake->head_row = cur_row;
+  snake->head_col = cur_col;
+
   return;
 }
 
 /* Task 6.2 */
-game_state_t *initialize_snakes(game_state_t *state) {
+game_state_t* initialize_snakes(game_state_t* state) {
   // TODO: Implement this function.
-  return NULL;
+  if(state == NULL) {
+    return NULL;
+  }
+
+  unsigned int snake_num = 0;
+  unsigned int *tail_rows = malloc(sizeof(unsigned int) * 1000);
+  unsigned int *tail_cols = malloc(sizeof(unsigned int) * 1000);
+
+  for (unsigned int i = 0; i < state->num_rows; i ++ ) {
+    for(unsigned int j = 0; j < strlen(state->board[i]); j ++ ) {
+      if(is_tail(state->board[i][j])) {
+        tail_rows[snake_num] = i;
+        tail_cols[snake_num] = j;
+        snake_num ++ ;
+      }
+    }
+  }
+
+  snake_t* snakes = malloc(sizeof(snake_t) * snake_num);
+  state->snakes = snakes;
+  state->num_snakes = snake_num;
+
+  for(unsigned int i = 0; i < snake_num; i ++ ) {
+    snakes[i].tail_row = tail_rows[i];
+    snakes[i].tail_col = tail_cols[i];
+    snakes[i].live = 1;
+    find_head(state, i);
+  }
+
+  free(tail_cols);
+  free(tail_rows);
+  
+  return state;
 }
