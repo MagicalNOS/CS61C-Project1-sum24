@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wno-unused-function -Wconversion -std=c99 -g
+CFLAGS = -Wall -Wno-unused-function -Wconversion -std=gnu99 -g
 LDFLAGS =
 SNAKE_DEPS = src/snake.o src/snake_utils.o src/state.o
 INTERACTIVE_DEPS = src/interactive_snake.o src/snake_utils.o src/state.o

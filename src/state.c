@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "snake_utils.h"
+#include <sys/types.h>
 
 /* Helper function definitions */
 static void set_board_at(game_state_t *state, unsigned int row, unsigned int col, char ch);
@@ -335,9 +336,7 @@ void update_state(game_state_t *state, int (*add_food)(game_state_t *state)) {
     update_head(state,i);
     update_tail(state,i);
 
-
   }
-
 
   return;
 }
@@ -345,13 +344,52 @@ void update_state(game_state_t *state, int (*add_food)(game_state_t *state)) {
 /* Task 5.1 */
 char *read_line(FILE *fp) {
   // TODO: Implement this function.
-  return NULL;
+  char* line = NULL;
+
+  size_t len = 0;
+  ssize_t read;
+  
+  read = getline(&line,&len,fp);
+
+  if(read == -1){
+    return NULL;
+  }
+
+
+  char* heap_line = malloc(sizeof(char)*len + 5);
+
+  if(heap_line == NULL){
+    return NULL;
+  }
+  
+  strcpy(heap_line,line);
+  return heap_line;
 }
 
 /* Task 5.2 */
 game_state_t *load_board(FILE *fp) {
   // TODO: Implement this function.
-  return NULL;
+
+  game_state_t* start = (game_state_t*)malloc(sizeof(game_state_t));
+  start->board = malloc(sizeof(start->board)*100);
+  start->num_rows = 0;
+  
+
+  char* line;
+  while((line = read_line(fp)) != NULL){
+
+    size_t length = strlen(line);
+    if (length > 0 && line[length - 1] == '\n') {
+      line[length - 1] = '\0'; // Remove newline character
+    }
+
+    start->board = realloc(start->board,(start->num_rows + 1)* sizeof(char*));
+    start->board[start->num_rows++] = line;
+  }
+  
+  start->snakes = NULL;
+
+  return start;
 }
 
 /*
