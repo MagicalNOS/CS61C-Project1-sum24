@@ -600,3 +600,5 @@ unit-test-*.snk
 
 # Temp files
 *.tmp
+
+.vscode
